@@ -1,4 +1,4 @@
-<div class="bs-example" style="min-width: 950px ">
+<div class="bs-example" style="min-width: 950px">
     <div class="panel-group" id="accordion">
         <div class="panel panel-primary">
             <div class="panel-heading">
@@ -68,7 +68,7 @@
 
                             <td style="text-align: center;">
                                 <div>
-                                <select name="colors" [(ngModel)]="item.szin" class="btn btn-default dropdown-toggle" [ngStyle]="item.style" (ngModelChange)="colorPrice(item.id-1,$event)">
+                                <select name="colors" [(ngModel)]="item.szin"  class="btn btn-default dropdown-toggle" (ngModelChange)="colorPrice(item.id-1,$event)">
                                     <optgroup label="Ral színek">
                                         <option *ngFor="let color of szinek.ral" [value]="color.nev" [ngStyle]="color.szin">{{color.nev}}</option>
                                     </optgroup>

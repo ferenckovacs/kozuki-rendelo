@@ -49,7 +49,7 @@ export class AppComponent {
    constructor(){
      this.rendeles = [];
      for (var i = 1; i<5; i++){
-        this.rendeles.push(new Order(i,'true','Válasszon!',['Válasszon!'],'Válasszon!','Válasszon!',[''],0,0,0,0,0,0));
+        this.rendeles.push(new Order(i,'true','Válasszon!',['Válasszon!'],'Válasszon!','Válasszon!',[{'background': 'white', 'color': 'black'}],0,0,0,0,0,0));
         this.rowcounter = i;
      }
    };
@@ -122,7 +122,7 @@ export class AppComponent {
 
    addRow(){
       this.rowcounter++;
-      this.rendeles.push(new Order(this.rowcounter,'true','Válasszon!',['Válasszon!'],'Válasszon!','Válasszon!',[''],0,0,0,0,0,0));
+      this.rendeles.push(new Order(this.rowcounter,'true','Válasszon!',['Válasszon!'],'Válasszon!','Válasszon!',[{'background': 'white', 'color': 'black'}],0,0,0,0,0,0));
    };
 
    teszt(id,event){
