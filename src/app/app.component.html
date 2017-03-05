@@ -1,0 +1,344 @@
+<div class="bs-example" style="min-width: 950px">
+    <div class="panel-group" id="accordion">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <table style="width: 100%">
+                            <tr>
+                                <td>
+                                     <h4><p style="float: left;">Lemez típusának kiválasztás, méretek megadása, szín kiválasztása</p></h4>
+                                </td>
+                                <td style="margin-right: 5px; float:right;">
+                                   <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+                                        <button type="button" class="btn btn-success">Tovább <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></button>
+                                     </a>
+                                </td>
+                            </tr>
+                       </table>  
+                </h4>
+            </div>
+            <div id="collapseOne" class="panel-collapse collapse in">
+                <div class="panel-body">
+                <table [mfData]="rendeles" #mf="mfDataTable">
+                    <thead>
+                        <tr>
+                            <th style="width:5%; text-align: center;">
+                            <mfDefaultSorter by="tipus">Típus</mfDefaultSorter>
+                            </th>
+                            <th style="width: 5%; text-align: center;">
+                            <mfDefaultSorter by="szin">Szín</mfDefaultSorter>
+                            </th>
+                            <th style="width:5%; text-align: center;">
+                            <mfDefaultSorter by="meret">Vastagság</mfDefaultSorter>
+                            </th>
+                            <th style="width: 10%; text-align: center;">
+                                <mfDefaultSorter by="hossz">Hossz (mm)</mfDefaultSorter>
+                            </th>
+                            <th style="width: 8%; text-align: center;">
+                                <mfDefaultSorter by="db">db</mfDefaultSorter>
+                            </th>
+                            <th style="width: 2%; text-align: center;">
+                                Csavar
+                            </th>
+                            
+                            <th style="width: 7%; text-align: center;">
+                                <mfDefaultSorter by="db">m<sup>2</sup></mfDefaultSorter>
+                            </th>
+                            <th style="width: 10%; text-align: center;">
+                                <mfDefaultSorter by="db">Nettó Egys. Ár</mfDefaultSorter>
+                            </th>
+                            <th style="width: 10%; text-align: center;">
+                                <mfDefaultSorter by="db">Nettó ár</mfDefaultSorter>
+                            </th>
+                            <th style="width: 10%; text-align: center;">
+                                <mfDefaultSorter by="db">Bruttó Ár</mfDefaultSorter>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of rendeles">                                
+                            <td style="text-align: center;">
+                                <div class="dropdown">
+                                <select id="type" name="lemezek" class="btn btn-default dropdown-toggle" [ngModel]="item.tipus" style="width: 180px;">
+                                    <option>Válasszon!</option>
+                                    <option *ngFor="let lemez of lemeztipusok" [value]="lemez">{{lemez.nev}}</option>
+                                </select>
+                                </div>
+                            </td>
+
+                            <td style="text-align: center;">
+                                <div>
+                                <select name="colors" [(ngModel)]="item.szin" class="btn btn-default dropdown-toggle" [ngStyle]="item.style" (ngModelChange)="colorPrice(item.id-1,$event)">
+                                    <optgroup label="Ral színek">
+                                        <option *ngFor="let color of szinek.ral" [value]="color.nev" [ngStyle]="color.szin">{{color.nev}}</option>
+                                    </optgroup>
+                                    <optgroup label="Fa színek">
+                                        <option *ngFor="let color of szinek.fa" [ngStyle]="color.szin">{{color.nev}}</option>
+                                    </optgroup>
+                                </select>
+                                </div>
+                            </td>
+
+                            <td style="text-align: center;">
+                                <div class="dropdown">
+                                <select id="thickness" name="meretek" class="btn btn-default dropdown-toggle" [(ngModel)]="item.meret" (ngModelChange)="vastagsagValtozas(item.id-1,$event)">      
+                                    <option *ngFor="let meret of item.vastagsag"  [value]="meret" >{{meret}}</option>
+                                </select>
+                                </div>
+                            </td>
+                            <td style="text-align: center;">
+                            <input class="form-control" style="margin-right: 10px" id="hossz" value="{{item.hossz}}" [ngModel]="item.hossz" (blur)="ujraszamol(item.id,$event,'hossz')">
+                            </td>
+                            <td style="text-align: center;">
+                            <input class="form-control" id="db" value="{{item.db}}" [ngModel]="item.db" (blur)="ujraszamol(item.id,$event,'db')">
+                            </td>
+                            <td style="text-align: center;"><input type="checkbox" [ngModel]="item.csavar" value="item.csavar" style="width: 25px; height:25px;"></td>
+                            <td style="text-align: center;">
+                            {{item.m2}} m<sup>2</sup>
+                            </td>
+                            <td style="text-align: center;">
+                            {{item.net}} Ft
+                            </td>
+                            <td style="text-align: center;">
+                            {{item.nar}} Ft
+                            </td>
+                            <td style="text-align: center;">
+                            {{item.bar}} Ft
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <td colspan="7" style="text-align: center; padding-top: 5px;">
+                            <button type="button" class="btn btn-warning" (click)="addRow()"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Új lemezméret hozzáadása</button>
+                        </td>
+                        <td style="text-align: center; background-color: lightblue; border-bottom-left-radius:  5px; border-top-left-radius: 5px;">
+                            <b>
+                                Összesen:
+                            </b>
+                        </td>
+                        <td style="text-align: center; background-color: lightblue;">
+                            <b>
+                                {{lemezosszesennet}} Ft
+                            </b>
+                        </td>
+                        <td style="text-align: center; background-color: lightblue; border-bottom-right-radius: 5px; border-top-right-radius: 5px;">
+                             <b>
+                                {{lemezosszesenbr}} Ft
+                            </b> 
+                        </td>
+                    </tfoot>
+                </table>
+            </div>
+            </div>
+        </div>
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <table style="width: 100%">
+                        <tr>
+                            <td style="text-align: left;">
+                                    <h4><p style="float: left;">Kiegészítók kiválasztása, csavarok automatikus kiszámolása, darabszámok módosítása</p></h4>
+                            </td>
+                            <td style="margin-right: 5px; float:right;">
+                                
+                                <!--<button type="button" class="btn btn-warning" (click)="addRow()"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Új Lemezméret</button>-->
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                                    <button type="button" class="btn btn-success"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Vissza</button>
+                                </a>
+                                <a data-toggle="collapse" data-parent="#accordion" href="##collapseThree">
+                                    <button type="button" class="btn btn-success">Tovább <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></button>
+                                </a>
+                            </td>
+                        </tr>
+                    </table> 
+                </h4>
+            </div>
+            <div id="collapseTwo" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <table [mfData]="rendeles" #mf="mfDataTable">
+                    <thead>
+                        <tr>
+                            <th style="width:2%; text-align: center;">
+                            Kiegészító neve
+                            </th>
+                            <th style="width:5%; text-align: center;">
+                            Szín
+                            </th>
+                            <th style="width: 5%; text-align: center;">
+                            db
+                            </th>
+                            <th style="width: 15%; text-align: center;">
+                                <mfDefaultSorter by="db">Nettó Egys. Ár</mfDefaultSorter>
+                            </th>
+                            <th style="width: 15%; text-align: center;">
+                                <mfDefaultSorter by="db">Nettó ár</mfDefaultSorter>
+                            </th>
+                            <th style="width: 15%; text-align: center;">
+                                <mfDefaultSorter by="db">Bruttó Ár</mfDefaultSorter>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of rendeles">
+                            <td style="text-align: center;">
+                                <div class="dropdown">
+                                <select id="type" name="lemezek" class="btn btn-default dropdown-toggle" [ngModel]="item.tipus" style="width: 166px;">
+                                    <option>Válasszon!</option>
+                                    <option *ngFor="let lemez of lemeztipusok" [value]="lemez">{{lemez.nev}}</option>
+                                </select>
+                                </div>
+                            </td>
+
+                            <td style="text-align: center;">
+                                <div class="dropdown">
+                                <select name="colors" [(ngModel)]="item.szin" class="btn btn-default dropdown-toggle" (ngModelChange)="colorPrice(item.id-1,$event)">
+                                    <optgroup label="Ral színek">
+                                        <option *ngFor="let color of szinek.ral" [value]="color.nev" [ngStyle]="color.szin">{{color.nev}}</option>
+                                    </optgroup>
+                                    <optgroup label="Fa színek">
+                                        <option *ngFor="let color of szinek.fa" [ngStyle]="color.szin">{{color.nev}}</option>
+                                    </optgroup>
+                                </select>
+                                </div>
+                            </td>
+
+                             <td style="text-align: center;">
+                            <input class="form-control" id="db" value="{{item.db}}" [ngModel]="item.db" (blur)="ujraszamol(item.id,$event,'db')">
+                            </td>
+                           
+                            <td style="text-align: center;">
+                            {{item.net}}
+                            </td>
+                            <td style="text-align: center;">
+                            {{item.nar}}
+                            </td>
+                            <td style="text-align: center;">
+                            {{item.bar}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                     <table style="width: 100%">
+                        <tr>
+                            <td style="text-align: left;">
+                                    <h4><p style="float: left;">Megrendelő adatai, szállítási cím, elérhetőség, Megrendelés elküldése</p></h4>
+                            </td>
+                            <td style="margin-right: 5px; float:right;">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+                                    <button type="button" class="btn btn-success"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Vissza</button>
+                                </a>
+                                <a data-toggle="collapse" data-parent="#accordion" href="##collapseThree">
+                                    <button type="button" class="btn btn-success">Tovább <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></button>
+                                </a>
+                            </td>
+                        </tr>
+                    </table> 
+                </h4>
+            </div>
+            <div id="collapseThree" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <table [mfData]="rendeles" #mf="mfDataTable">
+                    <thead>
+                        <tr>
+                            <th style="width:2%; text-align: center;">
+                            <mfDefaultSorter by="Id">ID</mfDefaultSorter>
+                            </th>
+                            <th style="width:5%; text-align: center;">
+                            <mfDefaultSorter by="tipus">Típus</mfDefaultSorter>
+                            </th>
+                            <th style="width: 5%; text-align: center;">
+                            <mfDefaultSorter by="szin">Szín</mfDefaultSorter>
+                            </th>
+                            <th style="width:5%; text-align: center;">
+                            <mfDefaultSorter by="meret">Méret</mfDefaultSorter>
+                            </th>
+                            <th style="width: 10%; text-align: center;">
+                                <mfDefaultSorter by="hossz">Hossz (mm)</mfDefaultSorter>
+                            </th>
+                            <th style="width: 8%; text-align: center;">
+                                <mfDefaultSorter by="db">db</mfDefaultSorter>
+                            </th>
+                            <th style="width: 2%; text-align: center;">
+                                Csavar
+                            </th>
+                            
+                            <th style="width: 12%; text-align: center;">
+                                <mfDefaultSorter by="db">m2</mfDefaultSorter>
+                            </th>
+                            <th style="width: 15%; text-align: center;">
+                                <mfDefaultSorter by="db">Nettó Egys. Ár</mfDefaultSorter>
+                            </th>
+                            <th style="width: 15%; text-align: center;">
+                                <mfDefaultSorter by="db">Nettó ár</mfDefaultSorter>
+                            </th>
+                            <th style="width: 15%; text-align: center;">
+                                <mfDefaultSorter by="db">Bruttó Ár</mfDefaultSorter>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of rendeles">
+                            <td style="text-align: center;">{{item.id}}</td>
+                                
+                            <td>
+                                <div class="dropdown">
+                                <select id="type" name="lemezek" class="btn btn-default dropdown-toggle" [ngModel]="item.tipus">
+                                    <option>Válasszon!</option>
+                                    <option *ngFor="let lemez of lemeztipusok" [value]="lemez">{{lemez.nev}}</option>
+                                </select>
+                                </div>
+                            </td>
+
+                            <td style="text-align: center;">
+                                <div class="dropdown">
+                                <select name="colors" [(ngModel)]="item.szin" class="btn btn-default dropdown-toggle" (ngModelChange)="colorPrice(item.id-1,$event)">
+                                    <optgroup label="Ral színek">
+                                        <option *ngFor="let color of szinek.ral" [value]="color.nev" [ngStyle]="color.szin">{{color.nev}}</option>
+                                    </optgroup>
+                                    <optgroup label="Fa színek">
+                                        <option *ngFor="let color of szinek.fa" [ngStyle]="color.szin">{{color.nev}}</option>
+                                    </optgroup>
+                                </select>
+                                </div>
+                            </td>
+
+                            <td style="text-align: center;">
+                                <div class="dropdown">
+                                <select id="thickness" name="meretek" class="btn btn-default dropdown-toggle" [(ngModel)]="item.meret" (ngModelChange)="vastagsagValtozas(item.id-1,$event)">      
+                                    <option *ngFor="let meret of item.vastagsag"  [value]="meret" >{{meret}}</option>
+                                </select>
+                                </div>
+                            </td>
+                            <td style="text-align: center;">
+                            <input class="form-control" style="margin: 10,10,10,10" id="hossz" value="{{item.hossz}}" [ngModel]="item.hossz" (blur)="ujraszamol(item.id,$event,'hossz')">
+                            </td>
+                            <td style="text-align: center;">
+                            <input class="form-control" id="db" value="{{item.db}}" [ngModel]="item.db" (blur)="ujraszamol(item.id,$event,'db')">
+                            </td>
+                            <td style="text-align: center;"><input type="checkbox" value="item.csavar" style="width: 25px; height:25px;"></td>
+                            <td style="text-align: center;">
+                            {{item.m2}}
+                            </td>
+                            <td style="text-align: center;">
+                            {{item.net}}
+                            </td>
+                            <td style="text-align: center;">
+                            {{item.nar}}
+                            </td>
+                            <td style="text-align: center;">
+                            {{item.bar}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
